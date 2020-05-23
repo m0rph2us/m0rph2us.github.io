@@ -90,7 +90,7 @@ CDC는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베�
 ## 마무리
 MySQL 데이터베이스를 사용하고 위에서 언급한 내용들에 대해 고민해본적이 있다면 추천하는 설루션이다. 실제로 프로덕션에 적용해서 서비스의 비효율적인 부분들을 많이 개선한 경험이 있다. 디비지움 프로젝트도 현재 MySQL에 대해서는 성숙도가 높다.
 
-## 참고 자료
+## 참고
 * [이벤트 소싱](https://www.confluent.io/blog/event-sourcing-vs-derivative-event-sourcing-explained/)
 * [CDC 솔루션들](https://github.com/wushujames/mysql-cdc-projects/wiki)
 * [if kakao 2019](https://mk.kakaocdn.net/dn/if-kakao/conf2019/%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C_2019/T03-S01.pdf)
