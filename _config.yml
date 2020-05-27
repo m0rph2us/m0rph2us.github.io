@@ -25,6 +25,7 @@ description: This is my blog about programming.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: m0rph2us
+show_excerpts: true
 
 # Build settings
 theme: minima
