@@ -7,7 +7,7 @@ title: Getting Started With Jekyll Without Installing Ruby
 ## 도커 설치
 Ruby는 설치하지 않지만, 도커를 설치해야 한다. 개발자라면 도커가 굉장히 유용하기 때문에 설치를 적극 권장한다.
 
-도커가 설치되어 있지 않다면 [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/) 를 참고하여 도커를 설치한다.
+도커가 설치되어 있지 않다면 [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)를 참고하여 도커를 설치한다.
 
 ## 컨테이너에 진입
 
