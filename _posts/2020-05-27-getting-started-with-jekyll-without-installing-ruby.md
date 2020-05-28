@@ -161,3 +161,8 @@ bundle exec jekyll serve --host 0.0.0.0
 ## github.io로 올리기
 
 github page를 만드는 방법은 [https://pages.github.com/](https://pages.github.com/)의 지침을 따르기 바란다. 생성한 리포지토리로 생성한 파일들을 푸시하기만 하면 된다. 띄울때 문제가 생기면 github 계정에 연결된 이메일로 알림이 온다.
+
+## 참고
+
+1. [구글 검색엔진 등록하기](https://gmlwjd9405.github.io/2017/10/20/include-blog-in-a-GoogleSearchEngine.html)
+
