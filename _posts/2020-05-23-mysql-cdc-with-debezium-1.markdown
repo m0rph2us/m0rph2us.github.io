@@ -5,7 +5,7 @@ title: 'MySQL CDC With Debezium #1'
 categories: mysql cdc debezium
 ---
 
-# 디비지움으로 MySQL CDC 하기
+# 디비지움으로 MySQL CDC 하기 #1
 ## 개요
 
 MySQL 테이블의 특정 칼럼 값이 변경될 때 해당 row의 데이터 또는 그와 연관된 정보가 준실시간으로 필요해졌다. 몇 가지 방식을 생각해 볼 수 있는데, 서로 장단점을 따져보니 CDC(Change Data Capture)가 가지는 장점이 더 많았다. 
