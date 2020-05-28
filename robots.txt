@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: http://m0rph2us.github.io/sitemap.xml
