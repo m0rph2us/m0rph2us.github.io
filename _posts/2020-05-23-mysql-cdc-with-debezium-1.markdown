@@ -1,16 +1,20 @@
 ---
 layout: post
+excerpt_separator: <!--more-->
 title: 'MySQL CDC With Debezium #1'
-date: '2020-05-23 04:17:14 -0500'
 categories: mysql cdc debezium
 ---
 
+# 디비지움으로 MySQL CDC 하기
 ## 개요
+
 MySQL 테이블의 특정 칼럼 값이 변경될 때 해당 row의 데이터 또는 그와 연관된 정보가 준실시간으로 필요해졌다. 몇 가지 방식을 생각해 볼 수 있는데, 서로 장단점을 따져보니 CDC(Change Data Capture)가 가지는 장점이 더 많았다. 
+<!--more-->
 
 이 문서는 CDC가 어떤 장점을 가지는지, 기술 대중성이 있는지를 파악함에 목적이 있다.
 
 ## 전통적인 방식
+
 몇 가지 전통적인 방식중 가장 많이 사용하는 방식은 데이터 변경 행위가 일어날 때마다 이벤트를 발생시켜주는 것이다.
 
 하지만 이 경우에는 다음과 같은 잠재적인 문제가 존재한다.
@@ -22,6 +26,7 @@ MySQL 테이블의 특정 칼럼 값이 변경될 때 해당 row의 데이터 �
 그 외에 replication 데이터베이스를 사용하는 방법도 있겠으나, 서로 다른 서비스가 서로 다른 도메인의 데이터베이스를 참조하는 것은 좋은 디자인이라고 볼 수 없다. 서비스는 각자 독립적으로 성장할 수 있어야 하고 최대한 느슨한 결합을 가지는 것이 좋다. 그리고, 이 경우에는 원하는 결과를 얻기 위해 table join 이 증가하는 경향을 보인다.
 
 ## CDC(CHANGE DATA CAPTURE)
+
 CDC는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베이스같은 데이터 스토어의 데이터 변경을 포착하여 ETL, 감사(audit), 캐싱과 같은 다양한 후속 처리를 하는 데 사용된다.
 
 본인은 MySQL 데이터베이스를 주로 사용하기 때문에 MySQL CDC 솔루션들을 찾아봤다.
@@ -45,6 +50,7 @@ CDC는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베�
 여러 솔루션들 중 Kafka와 가장 궁합이 잘 맞을 것으로 판단되는 디비지움(Debezium)을 선택했다.
 
 ## DEBEZIUM
+
 디비지움은 CDC를 수행하기 위한 오픈소스 분산 플랫폼이다.
 
 여기 블로그에 가보면 왜 CDC인가? 라는 내용이 다음과 같이 설명되어 있다.
@@ -93,9 +99,11 @@ CDC는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베�
 * 준실시간으로 상태 변경을 포착하여 캐싱, 알림등의 트리거로 사용하고자 할 때
 
 ## 마무리
+
 MySQL 데이터베이스를 사용하고 위에서 언급한 내용들에 대해 고민해본적이 있다면 추천하는 설루션이다. 실제로 프로덕션에 적용해서 서비스의 비효율적인 부분들을 많이 개선한 경험이 있다. 디비지움 프로젝트도 현재 MySQL에 대해서는 성숙도가 높다.
 
 ## 참고
+
 * [이벤트 소싱](https://www.confluent.io/blog/event-sourcing-vs-derivative-event-sourcing-explained/)
 * [CDC 솔루션들](https://github.com/wushujames/mysql-cdc-projects/wiki)
 * [if kakao 2019](https://mk.kakaocdn.net/dn/if-kakao/conf2019/%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C_2019/T03-S01.pdf)

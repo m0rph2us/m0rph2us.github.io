@@ -1,12 +1,15 @@
 ---
 layout: post
+excerpt_separator: <!--more-->
 title: Getting Started With Jekyll Without Installing Ruby
+categories: jekyll docker
 ---
 
 # Ruby 설치없이 Jekyll 사용하기
 ## 개요
 
 이 문서는 Ruby 설치없이 Jekyll 도커 컨테이너를 사용하여 jekyll 블로그를 만드는 방법을 설명한다.
+<!--more-->
 
 ## 도커 설치
 
