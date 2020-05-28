@@ -37,7 +37,7 @@ docker run -it --rm --volume="$PWD:/srv/jekyll" -p 4000:4000 jekyll/jekyll:4 bas
 `/srv/jekyll` 로 이동하여 다음 명령을 실행하면 blog 디렉터리가 생긴다(디렉터리 이름은 원하는 것을 사용하기 바란다). 
 
 ```shell
-/usr/loca/bundle/bin/jekyll new blog
+/usr/local/bundle/bin/jekyll new blog
 ```
 
 ## Gemfile 편집
