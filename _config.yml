@@ -22,8 +22,8 @@ title: Trust Me
 author: Ilho Yu
 email: acid.acidrain@gmail.com
 description: This is my blog about programming.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/" # the subpath of your site, e.g. /blog
+url: "http://m0rph2us.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: m0rph2us
 show_excerpts: true
 
