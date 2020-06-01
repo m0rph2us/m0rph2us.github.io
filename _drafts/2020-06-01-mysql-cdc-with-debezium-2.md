@@ -1,7 +1,7 @@
 ---
 layout: post
 excerpt_separator: <!--more-->
-title: MySQL CDC With Debezium #2
+title: 'MySQL CDC With Debezium #2'
 categories: mysql cdc debezium
 ---
 
