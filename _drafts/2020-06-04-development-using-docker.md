@@ -44,9 +44,15 @@ VM은 Virtual Machine, 즉, 가상의 컴퓨터다. 이렇게 가상의 컴퓨�
 
 ## 기본 사용법
 
+도커가 설치되어 있지 않다면 먼저 설치해야 한다. 설치 방법은 [여기](https://docs.docker.com/engine/install/)를 참고하기 바란다. 설치가 되었다면 다음과 같이 도커 이미지를 당겨(pull) 올 수 있다.
+
+docker run docker/whalesay cowsay boo
+
 ## 도커를 이용한 개발
 
 ## GitOps
+
+## 리소스 조정
 
 ## 참고
 
