@@ -8,7 +8,7 @@ categories: mysql docker
 # MySQL 도커를 활용하여 개발하기
 ## 개요
 
-이 글에서는 MySQL 도커를 활용하여 개발하는 방식에 대해 알아볼 것이다. 본인이 팀원들과 함께 프로젝트에 적용해보고 정립한 프로세스 및 그 과정에서 느낀점 위주로 설명하려고 한다.
+이 글에서는 MySQL 도커를 활용하여 개발하는 방식에 대해 알아볼 것이다. 데이터베이스를 활용한 개발에서 컨테이너는 그 진가를 크게 발휘한다. 프로덕션에서 발생하는 장애 요인 중 데이터베이스 관련한 장애가 꽤 큰 비중을 차지하기 때문에 개발 환경을 프로덕션 환경과 최대한 동일한 환경으로 구성하는 것이 좋다.
 <!--more-->
 
 ## 데이터베이스 환경이 중요한 이유
@@ -58,45 +58,110 @@ docker-compose up
 
 단순히 MySQL 서버만 띄워서 개발 목적으로 사용하는 것은 무리가 있다. 왜냐하면 프로덕션 수준의 중요한 서버 설정들(e.g. 트랜잭션 격리 수준, 리플리케이션 등)의 설정 적용이 필요하고, 필요한 데이터베이스 스키마도 구성해야 하며, 때에 따라서는 기본 데이터가 필요할 수도 있기 때문이다.
 
-이를 위해 본인이 미리 만둘어둔 docker-compose 구성이 있으므로 해당 구성을 천천히 살펴보도록 하자. [여기](https://github.com/m0rph2us/docker-mysql)에서 클론 받을 수 있다.
+이를 위해 본인이 미리 만들어둔 docker-compose 구성이 있으므로 해당 구성을 천천히 살펴보도록 하자. [여기](https://github.com/m0rph2us/docker-mysql)에서 클론 받을 수 있다.
 
 먼저 디렉터리 구조는 다음과 같다.
 
-```
+```shell
+.
 ├── README.md
-├── docker-compose.yml          # docker-compose 서비스 정의 파일
-├── seeding.sh                  # 데이터 시딩 쉘스크립트
+├── docker-compose.yml
 ├── conf
 │   ├── master
-│   │   └── my-ext.cnf          # 마스터 설정
-│   └── slave
-│       └── my-ext.cnf          # 슬레이브 설정
+│   │   └── my-ext.cnf
+│   └── slave
+│       └── my-ext.cnf
 ├── init
 │   ├── db
 │   │   └── sample
-│   │       ├── init-data.sql   # sample DB 초기화 SQL 스크립트
-│   │       └── init.sql
-│   └── mysql
-│       ├── master
-│       │   └── init.sql        # 마스터 mysql DB 초기화 SQL 스크립트 
-│       └── slave
-│           └── init.sql        # 슬레이브 mysql DB 초기화 SQL 스크립트
+│   │       ├── init-data.sql
+│   │       └── init.sql
+│   ├── mysql
+│   │   ├── master
+│   │   │   └── init.sql
+│   │   └── slave
+│   │       └── init.sql
+│   └── seeding.sh
 └── tool
     ├── tail-general-log.sh
     └── tail-slow-log.sh
 ```
 
+각 파일 및 디렉터리는 다음과 같은 내용을 포함한다.
+
+* docker-compose.yml
+  * master-slave 구조의 MySQL 서비스 정의
+* conf
+  * master, slave 서버 각각의 서버 설정
+* init/db
+  * 데이터베이스 초기화 SQL 스크립트
+* init/mysql
+  * MySQL 초기화 SQL 스크립트
+* init/seeding.sh
+  * 데이터베이스 초기화 쉘 스크립트
+* tool
+  * 제너럴, 슬로우 로그 확인용 스크립트
+
+docker-compose.yml 파일을 열어보자.
+
+```yaml
+version: '3'
+services:
+  mysql-master:
+    image: mysql:5.7.22
+    volumes:
+      - ./conf/master:/etc/mysql/conf.d
+      - ./init/mysql/master:/init-mysql
+      - ./init/db:/init-db
+      - ./init/seeding.sh:/docker-entrypoint-initdb.d/seeding.sh
+      #- ./volume/mysql-master:/var/lib/mysql
+    environment:
+      #- TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=1234
+    ports:
+      - '33060:3306'
+
+  mysql-slave:
+    image: mysql:5.7.22
+    volumes:
+      - ./conf/slave:/etc/mysql/conf.d
+      - ./init/mysql/slave:/init-mysql
+      - ./init/db:/init-db
+      - ./init/seeding.sh:/docker-entrypoint-initdb.d/seeding.sh
+      #- ./volume/mysql-slave:/var/lib/mysql
+    depends_on:
+      - mysql-master
+    environment:
+      #- TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=1234
+    ports:
+      - '33070:3306
+```
+
+정의는 굉장히 직관적이기 때문에 따로 설명은 하지 않겠다. 단지 이렇게 정의하고 `docker-compose up` 을 수행하게 되면 작업 디렉터리에서 docker-compose.yaml 파일을 찾아 기동하게 된다. `-f` 옵션을 사용하면 `docker-compose -f some.yaml up` 처럼 yaml 파일을 별도로 지정할 수도 있다.
+
 ## 진실의 원천(Source of Truth)
 
 사실 MySQL 도커를 사용하고자 했던 주된 이유 중의 하나가 바로 테이블 설계 때문이었다.
 
-기존의 방식을 되짚어 보면 프로젝트가 시작되고 누군가 요구사항을 분석하여 초안을 워드나 위키 문서로 만든다. 대부분 표를 그려서 한땀한땀 적어넣는다. 그리고 정성스러운? 리뷰 과정을 거쳐서 문서가 완성되면 개발, 스테이징에 차례로 반영하게 된다. 그리고, 개발 과정에서 수정 사항이 나오면 기록하거나 기록하지 않은채 개발, 스테이징에 반영하는 사이클이 반복되는 구조다. 정리된 문서 기준으로 피드백을 받다보니 팀원들의 리뷰 의무와 전파력이 약한 문제가 있으며, 심지어 누가 언제 어떤 일감 때문에 추가하고 삭제했는지 이력 파악이 힘들다는 단점이 있다.
+기존의 방식을 되짚어 보면 프로젝트가 시작되고 누군가 요구사항을 분석하여 초안을 워드나 위키 문서로 만든다. 대부분 표를 그려서 한땀한땀 적어넣는다. 그리고 정성스러운? 리뷰 과정을 거쳐서 문서가 완성되면 개발, 스테이징에 차례로 반영하게 된다. 그리고, 개발 과정에서 수정 사항이 나오면 기록하거나 기록하지 않은채 개발, 스테이징에 반영하는 사이클이 반복되는 구조다. 정리된 문서 기준으로 피드백을 받다보니 팀원들의 리뷰 의무와 전파력이 약한 문제가 있으며, 심지어 누가 언제 어떤 일감 때문에 추가하고 삭제했는지 이력 파악이 힘들다는 단점이 있다. 심지어 프로덕션 데이터베이스에 반영할 DDL이 누락되는 케이스도 종종 볼 수 있다. 
+
+하지만, 앞에서와 같이 컨테이너로 데이터베이스 환경을 구성하고, git과 같은 VCS로 버전관리를 하게 되면, 새로운 기능을 개발할 때마다 브랜치를 만들어 작업을 진행할 수 있게 된다. git으로 관리할 수 있다는 것은 풀리퀘스트와 같은 프로세스를 태울 수 있음을 의미한다. 즉, 더 이상 위키나 워드 문서에 표를 만들어 정리할 필요가 없다는 얘기이고, 모든 변경이력 또한 추적할 수 있음을 의미한다.
+
+## 유닛테스트
+
+MySQL 컨테이너를 큰 힘 들이지 않고 항상 새것처럼 빠르게 띄울 수 있기 때문에 유닛테스트에 사용할 때도 이점이 있다. H2DB와 같은 데이터베이스는 MySQL 시뮬레이션을 지원하지만, 말 그대로 시뮬레이션이기 때문에, MySQL 만이 가지는 특성 및 버전마다 존재하는 특성까지 시뮬레이션하기를 기대하기는 어렵다. 즉, 제대로 연계테스트를 하려면 MySQL에 직접해야 된다는 것이다.
+
+## 두 유 노우 flyway?
+
+여담이지만, flyway 라는 데이터베이스 버전컨트롤 툴?을 사용하는 경우를 간혹 볼 수 있는데, 테이블 하나가 수백만 로우의 데이터를 가지는 수준의 서비스라면, 사용을 진지하게 고민해보라고 말하고 싶다. 사용하는 데이터베이스에 따라서 테이블 락이 걸리거나 리플리케이션 지연이 발생할 수도 있기 때문에, 이러한 마이그레이션 툴에 의해서 온라인 DDL이 수행되는 경우 굉장히 주의해야 한다. 특히 MySQL은 버전에 따라 온라인 DDL 수행시 고려할 사항이 더 많은 편이다. 
 
 ## 마무리
 
-이 글에서는 개발을 진행할 때 MySQL 도커를 어떻게 활용할 수 있는지 알아보았다. 하지만, 이러한 환경을 구성해도, 개발자 스스로가 끊임없이 의문을 가지고 개선하지 않으면 의미가 없다.
+이 글에서는 개발을 진행할 때 MySQL 도커를 어떻게 활용할 수 있는지 살펴보았다. 비단 MySQL 뿐만이 아니다. Kafka, Redis 등도 마찬가지로 응용할 수가 있다. 데이터베이스라는 특성상 DDL이 존재하기 때문에 활용성이 더 클 뿐이다. 
 
 ## 참고
 
 1. [도커 시작하기](https://m0rph2us.github.io/docker/2020/06/12/docker-basics.html)
-2. [Docker For MySQL](https://github.com/m0rph2us/docker-mysql)
+1. [Docker For MySQL](https://github.com/m0rph2us/docker-mysql)
+1. [Overview of Docker Compose](https://docs.docker.com/compose/)
