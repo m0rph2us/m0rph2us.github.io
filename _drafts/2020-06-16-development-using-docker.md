@@ -56,6 +56,35 @@ docker-compose up
 
 ## docker-compose를 이용한 구성 살펴보기 
 
+단순히 MySQL 서버만 띄워서 개발 목적으로 사용하는 것은 무리가 있다. 왜냐하면 프로덕션 수준의 중요한 서버 설정들(e.g. 트랜잭션 격리 수준, 리플리케이션 등)의 설정 적용이 필요하고, 필요한 데이터베이스 스키마도 구성해야 하며, 때에 따라서는 기본 데이터가 필요할 수도 있기 때문이다.
+
+이를 위해 본인이 미리 만둘어둔 docker-compose 구성이 있으므로 해당 구성을 천천히 살펴보도록 하자. [여기](https://github.com/m0rph2us/docker-mysql)에서 클론 받을 수 있다.
+
+먼저 디렉터리 구조는 다음과 같다.
+
+```
+├── README.md
+├── docker-compose.yml          # docker-compose 서비스 정의 파일
+├── seeding.sh                  # 데이터 시딩 쉘스크립트
+├── conf
+│   ├── master
+│   │   └── my-ext.cnf          # 마스터 설정
+│   └── slave
+│       └── my-ext.cnf          # 슬레이브 설정
+├── init
+│   ├── db
+│   │   └── sample
+│   │       ├── init-data.sql   # sample DB 초기화 SQL 스크립트
+│   │       └── init.sql
+│   └── mysql
+│       ├── master
+│       │   └── init.sql        # 마스터 mysql DB 초기화 SQL 스크립트 
+│       └── slave
+│           └── init.sql        # 슬레이브 mysql DB 초기화 SQL 스크립트
+└── tool
+    ├── tail-general-log.sh
+    └── tail-slow-log.sh
+```
 
 ## 진실의 원천(Source of Truth)
 
