@@ -163,5 +163,6 @@ MySQL 컨테이너를 큰 힘 들이지 않고 항상 새것처럼 빠르게 띄
 ## 참고
 
 1. [도커 시작하기](https://m0rph2us.github.io/docker/2020/06/12/docker-basics.html)
+1. [스프링에서 여러 데이터베이스 연결하기](https://github.com/m0rph2us/multiple-datasource-spring-boot)
 1. [Docker For MySQL](https://github.com/m0rph2us/docker-mysql)
 1. [Overview of Docker Compose](https://docs.docker.com/compose/)
