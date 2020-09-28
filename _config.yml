@@ -18,7 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Trust Me
+title: 나는 한다 개발을
 author: Ilho Yu
 email: acid.acidrain@gmail.com
 description: This is my blog about programming.
