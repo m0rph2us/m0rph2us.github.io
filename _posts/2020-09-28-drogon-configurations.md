@@ -1,11 +1,11 @@
 ---
 layout: post
 excerpt_separator: <!--more-->
-title: Building Web App with Drogon
+title: Drogon - Configurations
 categories: drogon c++
 ---
 
-# 드로곤(Drogon) 설정 항목
+# 드로곤(Drogon) - 설정 항목
 ## 개요
 
 드로곤은 애플리케이션의 각종 설정 항목들을 JSON 을 통해 정의하고 참조한다. 이 문서는 드로곤의 설정 항목들에 대해서 살펴본다.

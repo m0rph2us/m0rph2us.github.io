@@ -1,11 +1,11 @@
 ---
 layout: post
 excerpt_separator: <!--more-->
-title: Building Web App with Drogon
+title: Drogon - Get Started
 categories: drogon c++
 ---
 
-# 드로곤(Drogon)으로 웹 애플리케이션 만들기
+# 드로곤(Drogon) - 시작하기
 ## 개요
 
 몇 달 전에 프레임워크 벤치마크에서 최상위를 차지했던 프레임워크라서 한번 테스트해보고 싶었다. 이 문서는 드로곤을 빌드하고 웹 애플리케이션을 작성하여 띄우는 
