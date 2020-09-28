@@ -316,17 +316,21 @@ categories: drogon c++
     //plugins: 애플리케이션에서 실핼되는 모든 플러그인을 정의한다.
     "plugins": [{
         //name: The class name of the plugin
+        //name: 플러그인의 클래스 이름
         //"name": "drogon::plugin::SecureSSLRedirector",
         //dependencies: Plugins that the plugin depends on. It can be commented out
+        //dependencies: 플로그인이 의존하는 플러그인. 주석처리 할 수 있음.
         "dependencies": [],
         //config: The configuration of the plugin. This json object is the parameter to initialize the plugin.
         //It can be commented out
+        //config: 플러그인의 설정. 플러그인을 초기화하기 위해 사용되는 매개변수이다.
         "config": {
             "ssl_redirect_exempt": [".*\\.jpg"],
             "secure_ssl_host": "localhost:8849"
         }
     }],
     //custom_config: custom configuration for users. This object can be get by the app().getCustomConfig() method.
+    //custom_config: 커스텀 설정. app().getCustomConfig() 메소드를 통해 접근할 수 있다.
     "custom_config": {}
 }
 ```
