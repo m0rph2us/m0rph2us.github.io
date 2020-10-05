@@ -2,7 +2,7 @@
 layout: post
 excerpt_separator: <!--more-->
 title: Drogon - Get Started
-categories: drogon c++
+categories: drogon c++ 드로곤
 ---
 
 # 드로곤(Drogon) - 시작하기

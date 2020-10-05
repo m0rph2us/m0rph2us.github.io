@@ -2,7 +2,7 @@
 layout: post
 excerpt_separator: <!--more-->
 title: Drogon - Configurations
-categories: drogon c++
+categories: drogon c++ 드로곤
 ---
 
 # 드로곤(Drogon) - 설정 항목
@@ -338,5 +338,5 @@ categories: drogon c++
 
 # 마무리
 
-설정 파일을 보면, 로깅, 필터, 플러그인, 파일 업로드, SSL 지원, gzip 압축 등 기본적으로 비즈니스 로직을 처리하는 데 무리가 없을 것으로 보인다. MySQL 액세스가 어떻게 지원되는지 
-궁금한데 이부분은 후속 포스트에서 천천히 살펴보기로 한다. 
+설정 파일을 보면, 로깅, 필터, 플러그인, 파일 업로드, SSL 지원, gzip 압축 등 기본적으로 비즈니스 로직을 처리하는 데 무리가 없을 것으로 보인다. MySQL 
+액세스가 어떻게 지원되는지 궁금한데 이부분은 후속 포스트에서 천천히 살펴보기로 한다. 
