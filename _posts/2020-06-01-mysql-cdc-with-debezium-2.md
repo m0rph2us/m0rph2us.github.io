@@ -87,7 +87,7 @@ GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *
 
 그리고, 생성된 계정으로 서버에 접속한 다음 `show binary logs` 를 실행해 보면 binlog 파일을 확인할 수 있다.
 
-공식적으로는 MySQL 5.7 이후 버전부터 지원한다. 하지만 약간의 패치와 권한 부여를 통해 5.x 버전에서도 사용이 가능하다.
+공식적으로는 MySQL 5.7 이후 버전부터 지원한다. 하지만 약간의 패치와 권한 부여를 통해 5.6 이하 버전에서도 사용이 가능하도록 만들 수 있다.
 
 ## 디비지움 커넥터 설정
 
