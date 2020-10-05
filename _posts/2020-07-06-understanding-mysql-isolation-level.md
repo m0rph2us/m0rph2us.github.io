@@ -15,22 +15,22 @@ categories: mysql transaction
 
 # MySQL 
 
-MySQL은 SQL:1992 표준에 기술된 다음의 격리 수준을 제공한다.
+MySQL 은 SQL:1992 표준에 기술된 다음의 격리 수준을 제공한다.
 
-* READ_UNCOMMITED
-* READ_COMMITED
+* READ_UNCOMMITTED
+* READ_COMMITTED
 * REPEATABLE_READ
 * SERIALIZABLE
 
 별도로 설정하지 않았다면 기본 격리 수준은 REPEATABLE_READ 이다.
 
-# READ_UNCOMMITED
+# READ_UNCOMMITTED
 
 격리 수준 중에서 제일 낮은 격리 수준이다. 이 트랜잭션 격리 수준에서는 A 트랜잭션에서 변경만 하고 커밋하지 않는 내용을 B 트랜잭션에서 조회할 수가 있다. 
 B 트랜잭션은 이후 A 트랜잭션이 롤백 또는 커밋이 되었는지 알 수 없다. 흔히 이러한 읽기를 더티 리드(Dirty Read)라고 한다. 이 단계에서는 넌리피터블 
 리드(Non-Repeatable Read)와 팬텀 리드(Phantom Read) 발생 가능성도 함께 공존한다.
 
-# READ_COMMITED
+# READ_COMMITTED
 
 A 트랜잭션에서 변경하고 커밋한 내용을 B 트랜잭션에서 조회할 수 있다. 커밋하지 않은 내용은 B 트랜잭션에서 조회할 수 없다. 더티 리드가 허용되는 
 READ_UNCOMMITED 보다 확실히 한 단계 수준이 높다는 것을 알 수 있다. 더티 리드를 허용하지 않지만, 다른 트랜잭션에서 커밋한 데이터를 조회할 수 있으므로 
