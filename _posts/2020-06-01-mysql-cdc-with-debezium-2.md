@@ -139,6 +139,8 @@ GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *
 8. 트랜잭션을 커밋한다.
 9. 커넥터 오프셋에 현재 포지션을 기록한다.
 
+이후에는 binlog 포지션을 추적하면서, 변경 데이터와 스키마 변경을 캡처하고 이벤트로 프로듀싱하게 된다.
+
 ## 언제 사용하는 것이 좋을까?
 
 주로 다음과 같은 상황에서 유용할 것이라 생각된다.
