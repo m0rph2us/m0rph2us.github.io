@@ -142,12 +142,29 @@ Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
 Run a command in a running container
 ``` 
 
-예를 들어 다음은 이미 실행중인 컨테이너에 `/bin/bash` 커맨드를 수행한다(이는 결과적으로 컨테이너의 쉘을 습득한다). COMMAND의 종료는 실행중인 컨테이너에 
+예를 들어 다음은 이미 실행중인 컨테이너에 `/bin/bash` 커맨드를 수행한다(이는 결과적으로 컨테이너의 쉘을 습득한다). COMMAND 의 종료는 실행중인 컨테이너에 
 영향을 주지 않는다.
 
 ```
 docker exec -it f72ca548214e /bin/bash
 ```
+
+## 자주 사용하는 옵션
+
+자주 사용하는 옵션들은 다음과 같다.
+
+* -it
+    * 컨테이너와 상호작용할 수 있다. 이 말은 호스트 터미널의 표준 입력과 출력이 컨테이너에 적용된다는 의미이다.
+* --rm
+    * 컨테이너가 중단되면 제거된다.
+* --name name
+    * 컨테이너의 이름이다.
+* -p 8080:80
+    * 호스트의 포트와 컨테이너의 포트를 맵핑한다.
+* -e SOME_ENV=test
+    * 환경 별수를 설정한다.
+* --volume="/host/path:/container/path"
+    * 호스트의 볼륨과 컨테이너의 볼륨을 맵핑한다.
 
 ## 마무리
 
