@@ -162,7 +162,7 @@ docker exec -it f72ca548214e /bin/bash
 * -p 8080:80
     * 호스트의 포트와 컨테이너의 포트를 맵핑한다.
 * -e SOME_ENV=test
-    * 환경 별수를 설정한다.
+    * 환경 변수를 설정한다.
 * --volume="/host/path:/container/path"
     * 호스트의 볼륨과 컨테이너의 볼륨을 맵핑한다.
 
