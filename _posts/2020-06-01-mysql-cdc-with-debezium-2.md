@@ -197,3 +197,5 @@ GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *
 ## 참고
 
 1. [샘플 클러스터 + 애플리케이션](https://github.com/m0rph2us/docker-debezium)
+2. [공식 튜토리얼](https://debezium.io/documentation/reference/1.2/tutorial.html)
+3. [MySQL 커넥터 공식 문서](https://debezium.io/documentation/reference/1.2/connectors/mysql.html)
