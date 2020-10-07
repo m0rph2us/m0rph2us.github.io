@@ -12,7 +12,7 @@ MySQL 테이블의 특정 칼럼 값이 변경될 때 해당 row의 데이터 �
 따져보니 CDC(Change Data Capture)가 가지는 장점이 더 많았다. 
 <!--more-->
 
-이 문서는 CDC가 어떤 장점을 가지는지, 기술 대중성이 있는지를 파악함에 목적이 있다.
+이 문서는 CDC 가 어떤 장점을 가지는지, 기술 대중성이 있는지를 파악함에 목적이 있다.
 
 ## 전통적인 방식
 
@@ -32,7 +32,7 @@ MySQL 테이블의 특정 칼럼 값이 변경될 때 해당 row의 데이터 �
 
 ## CDC(CHANGE DATA CAPTURE)
 
-CDC는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베이스같은 데이터 스토어의 데이터 변경을 포착하여 ETL, 감사(audit), 캐싱과 같은 다양한 
+CDC 는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베이스같은 데이터 스토어의 데이터 변경을 포착하여 ETL, 감사(audit), 캐싱과 같은 다양한 
 후속 처리를 하는 데 사용된다.
 
 본인은 MySQL 데이터베이스를 주로 사용하기 때문에 MySQL CDC 솔루션들을 찾아봤다.
@@ -54,15 +54,15 @@ CDC는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베�
 >
 >우리는 소스에 구애받지 않는 분산 변경 데이터 포착 시스템인 Databus를 만들었으며, 이는 LinkedIn의 데이터 처리 파이프 라인에 없어서는 안될 부분이다.
 
-국내의 경우 카카오뱅크, 카카오커머스가 CDC를 사용하고 있다.
+국내의 경우 카카오뱅크, 카카오커머스가 CDC 를 사용하고 있다.
 
 여러 솔루션들 중 Kafka와 가장 궁합이 잘 맞을 것으로 판단되는 디비지움(Debezium)을 선택했다.
 
 ## DEBEZIUM
 
-디비지움은 CDC를 수행하기 위한 오픈소스 분산 플랫폼이다.
+디비지움은 CDC 를 수행하기 위한 오픈소스 분산 플랫폼이다.
 
-여기 블로그에 가보면 왜 CDC인가? 라는 내용이 다음과 같이 설명되어 있다.
+여기 블로그에 가보면 왜 CDC 인가? 라는 내용이 다음과 같이 설명되어 있다.
 
 >Finally, CDC can also play a vital role in microservices architectures; exchanging data between services and keeping 
 >local views of data owned by other services achieves a higher independence, without having to rely on synchronous API calls.
@@ -90,13 +90,13 @@ CDC는 변경 데이터 포착(Change Data Capture)이다. 주로 데이터베�
 	* 디비지움을 재시작하면 마지막에 중단된 로그 포지션부터 데이터 변경 포착을 시작한다. 즉, 유실되지 않는다.
 * MySQL 관련
 	* log-bin 이 설정되어 있어야 한다.
-	* MySQL Slave 에 log-bin 을 설정해놨을 경우 해당 Slave에 붙어서 CDC를 할 수 있다.
+	* MySQL Slave 에 log-bin 을 설정해놨을 경우 해당 Slave 에 붙어서 CDC 를 할 수 있다.
 		* 이런 구성으로 CDC 를 할 경우 MySQL 서버 설정에 log_slave_update=1 설정이 반드시 필요하다. 그렇지 않을 경우 Replication 으로 인한 
 		변경분은 binlog 에 남지 않게 된다.
 	* binlog_format=row
 	* binlog_row_image=full
 		* MySQL 5.6 이상부터 지원한다.
-		* MySQL 5.5 는 명시적인 내용이 없으나, full로 봐도 무방하다. 오래된 오피셜 문서를 통해 확인한 내용이다.
+		* MySQL 5.5 는 명시적인 내용이 없으나, full 로 봐도 무방하다. 오래된 오피셜 문서를 통해 확인한 내용이다.
 
 디비지움은 기본적으로 5.5를 지원하지 않지만, 몇 줄의 소스코드 수정을 통해 5.5를 사용할 수는 있다.
 
