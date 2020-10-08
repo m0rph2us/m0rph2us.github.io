@@ -9,6 +9,10 @@ categories: docker
 ## 개요
 
 요즘의 개발, 인프라 구성은 컨테이너 기술을 활용하는 것이 대세가 되어가는 추세다. 이 글에서는 컨테이너의 개념을 간략히 설명할 것이다.
+
+{:refdef: style="text-align: center;"}
+![architecture](/assets/docker.png)
+{: refdef} 
 <!--more-->
 
 ## 컨테이너 vs VM

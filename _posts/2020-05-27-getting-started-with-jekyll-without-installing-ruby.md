@@ -63,7 +63,6 @@ gem "minima", "~> 2.5"
 # If you want to use GitHub Pages, remove the "gem "jekyll"" above and
 # uncomment the line below. To upgrade, run `bundle update github-pages`.
 gem "github-pages", group: :jekyll_plugins
-gem "jekyll-manager", group: :jekyll_plugins
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
@@ -161,7 +160,7 @@ bundle install
 다음으로 로컬에서 실행해 볼 수 있다.
 
 ```shell
-bundle exec jekyll serve --host 0.0.0.0
+bundle exec jekyll serve --host 0.0.0.0 --draft --watch
 ```
 
 `http://localhost:4000`으로 접근하면 블로그 화면으로, `http://localhost:4000/admin`으로 접근하면 블로깅 툴을 사용할 수 있다.
