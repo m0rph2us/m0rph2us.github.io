@@ -53,6 +53,10 @@ ETL 애플리케이션을 통해 수동으로 스냅샷을 수행하는 경우�
 이 1억 4천만건은 단순히 한 테이블에서 다른 테이블로의 동일한 데이터 이동이 아니라 역정규화가 이뤄진 형태의 스냅샷이었다. 물론 이렇게 하면 컨슈머 애플리케이션과
 ETL 애플리케이션 사이의 코드 중복이 어느정도 발생하게 되는건 사실이다.
 
+{:refdef: style="text-align: center;"}
+![architecture](/assets/snapshot-with-etl.png)
+{:refdef}
+
 스냅샷 과정은 초기에 한번 수행하는 프로세스이지만, 원본과 대상의 데이터 일관성을 맞추는 굉장히 중요한 과정이기도 하다. 테스트해보고, 고민해보고 운영 방식에 
 걸맞는 방식을 선택하는 것이 좋다.
 
@@ -70,9 +74,100 @@ ETL 애플리케이션 사이의 코드 중복이 어느정도 발생하게 되�
 
 1번과 2번의 경우에는 활성 장비와 예비 장비가 모두 살아 있는 상태에서 사전에 대응하므로 커넥터를 아예 새로 만들고, 기존 커넥터를 폐기하는 방식으로 대응하면 된다. 
 
+커넥터 구성을 새로 구성하는 방법은 다음과 같다. 다음과 같은 원본 커넥터 설정 `mysql-connect-db1.json` 이 있다고 가정해보자.
+
+```shell
+{
+        "name": "mysql-connector-db1",
+        "config": {
+                "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+                "database.hostname": "mysql-master-db1",
+                "database.port": "3306",
+                "database.user": "cdc_user",
+                "database.password": "1234",
+                "database.server.id": "3141592",
+                "database.serverTimezone": "Asia/Seoul",
+                "database.server.name": "cdc_db1",
+                "database.history.kafka.bootstrap.servers": "kafka-1:9092",
+                "database.history.kafka.topic": "dbhistory.db1",
+                "include.schema.changes": "true",
+                "table.whitelist": "sample.tb_user"
+        }
+}
+```
+
+다음과 같이 변경한 다음 설정파일을 저장한다.
+
+```shell
+{
+        "name": "mysql-connector-db1-2020100700",
+        "config": {
+                "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+                "database.hostname": "mysql-master-db1",
+                "database.port": "3306",
+                "database.user": "cdc_user",
+                "database.password": "1234",
+                "database.server.id": "3141592",
+                "database.serverTimezone": "Asia/Seoul",
+                "database.server.name": "cdc_db1",
+                "database.history.kafka.bootstrap.servers": "kafka-1:9092",
+                "database.history.kafka.topic": "dbhistory.db1.2020100700",
+                "include.schema.changes": "true",
+                "table.whitelist": "sample.tb_user"
+        }
+}
+```
+
+그런다음 다음과 같이 새로운 디비지움 커넥터를 생성한다.
+
+```shell
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" \
+  http://127.0.0.1:8083/connectors/ -d @mysql-connect-db1.json
+```
+
+그리고, 데이터가 잘 인입되는지 확인 후 기존 커넥터를 삭제하면 된다. 
+
+```shell
+curl -i -X DELETE -H "Accept:application/json" -H  "Content-Type:application/json" \
+  http://127.0.0.1:8083/connectors/mysql-connector-db1
+```
+
+이렇게 하게 될 경우 문제점은 중복 프로듀싱이다. 따라서 메시지가 중복 프로듀싱 되더라도 문제없이 처리되도록 설계하는 것이 좋다.
+
 반면, 3번의 경우에는 복구 불가능한 장애 상황에서 예비로 변경하는 것이기 때문에 활성 장비에서 기록된 binlog 포지션이 예비 장비의 binlog 포지션 어느 부분에 
 해당하는지 확인한다음 binlog 포지션을 변경해줘야 한다. 다소 번거러운 작업이다. 하지만 binlog 포지션만 정확히 찾을 수 있다면 데이터 유실은 걱정할 
 필요가 없다.
+
+빈로그 포지션을 변경하는 방법은 다음과 같다. 먼저 디비지움 커넥터의 마지막 포지션이 담긴 파티션의 내용을 확인해야 한다.
+
+```
+sudo docker run -it --rm edenhill/kafkacat:1.5.0 -b {Server list. e.g. kafka-1:9092} -C -t \
+    {Name of the offset topic} -f 'Partition(%p) %k %s\n'
+```
+
+커넥터 이름을 확인한 다음 제일 마지막 오프셋 내용을 통째로 복사한다. 내용은 다음과 유사할 것이다.
+
+```shell
+Partition(10) ["mysql-connector-test-db",{"server":"cdc_test_db"}] {"ts_sec":1600149140,"file":"test-bin.000638","pos":8579523,"row":1,"server_id":1001241,"event":2}
+```
+
+그런 다음 `mysqlbinlog` 를 이용해 원격 서버의 binlog 포지션을 조사해야 한다.
+
+```shell
+sudo docker run -it --rm mysql mysqlbinlog -h{Server host} -u{User ID} -p --read-from-remote-server \
+    --start-position=8579523 --stop-position=8679523 test-bin.000638
+```
+
+변경할 적당한 포지션을 찾았다면 해당 포지션으로 건너뛸 수 있도록 다음과 같이 토픽에 내용을 프로듀싱해주면 된다. 만약 858952 포지션으로 강제 적용해야 한다면 다음과
+같이 할 수 있다.
+
+```shell
+echo '["mysql-connector-test-db",{"server":"cdc_test_db"}]|{"ts_sec":1600149140,"file":"test-bin.000638","pos":858952,"row":1,"server_id":1001241,"event":2}' | \
+docker run -i -a stdin --rm edenhill/kafkacat:1.5.0 -P -b {Server list. e.g. kafka-1:9092} -t {Name of the offset topic} \
+-K \| -p {Partition number. 10 in this case.}
+```
+
+파이프를 사용하기 때문에 sudo 권한이 필요하다면 `sudo su` 로 권한을 상승시켜 실행하거나 스크립트로 만들어 실행하기 바란다.
 
 프로덕션용 데이터베이스는 아예 활성 장비와 예비 장비 두 대를 한 번에 준비하는 것이 좋다. 준비라고 해봤자 권한 추가하는 것과 이력을 관리하는 것 밖에 없으므로 
 큰 노력이 들지 않는다.
