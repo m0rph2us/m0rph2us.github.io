@@ -21,7 +21,7 @@
 title: 나는 한다 개발을
 author: Ilho Yu
 email: acid.acidrain@gmail.com
-description: This is my blog about programming.
+description: 이 블로그는 다룬다 모든 것을 개발에 관한
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "http://m0rph2us.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: m0rph2us
