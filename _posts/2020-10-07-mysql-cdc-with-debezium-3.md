@@ -186,3 +186,8 @@ docker run -i -a stdin --rm edenhill/kafkacat:1.5.0 -P -b {Server list. e.g. kaf
 ## 마무리
 
 이번 포스팅까지 디비지움에 대한 대부분을 살펴보았다. 빠진 부분이 있거나, 추가가 필요한 내용은 업데이트 하거나 별도의 포스팅을 할 예정이다.
+
+## 참고
+
+1. [카프카 커넥트 REST 인터페이스](https://docs.confluent.io/current/connect/references/restapi.html)
+2. [Running Kafka in Production](https://docs.confluent.io/current/kafka/deployment.html)
