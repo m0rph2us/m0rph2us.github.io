@@ -18,7 +18,7 @@ Zookeeper, Kafka 가 더 추가되는 정도이다. 프로덕션 고려사항에
 
 {:refdef: style="text-align: center;"}
 ![architecture](/assets/simple-debezium-usage-architecture.png)
-{: refdef}
+{:refdef}
 
 위의 아키텍처에서 각각은 다음과 같다.
 
