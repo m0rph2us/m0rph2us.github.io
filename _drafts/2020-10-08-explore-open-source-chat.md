@@ -31,19 +31,39 @@ categories: chat matter-most
 * 문서 수준
 * 가격 및 라이센싱 정책
 * 레퍼런스
+* 장점
+* 단점
 
 ## XMPP
 
 먼저, XMPP 이다. 가장 익숙하게 들어뵜을 법하다.
 
 * 구현 언어
+    * XMPP 는 프로토콜이기 때문에 언어마다 여러 구현체가 존재한다.
+    * 구현체
+        * Ejabberd
+            * Erlang
+        * Openfire
+            * Java
 * 오픈 소스 여부
+    * 여러 오픈소스 구현체가 존재한다.
 * 고가용성 구축
+    * Openfire
+        * https://secureanycloud.com/openfire-on-cloud-technical-support-cloud-help-azure-aws-opensource-cognosys/
+    * 
 * 문서 수준
+    * 프로토콜 문서가 곧 문서이다.
 * 가격 및 라이센싱 정책
+    * 오픈소스 구현체의 라이센스 정책에 따르지만, 대부분의 구현체가 무료다.
 * 레퍼런스
     * https://xmpp.org/uses/gaming.html
     * 레퍼런스 자체는 훌륭해 보임
+* 장점
+    * 역사가 있는 프로토콜
+    * 책도 있고, 레퍼런스도 있는 편
+* 단점
+    * 프로토콜이 XML 로 되어 있어 서버 부하를 유발하고 유지 비용이 올라가게 하지 않을까?
+    * 너무 오래되었고, 최근 10년 이내에 출판된 책이 없다.
 
 ## Rocket chat
 
@@ -52,12 +72,15 @@ categories: chat matter-most
 * 오픈 소스 여부
     * https://github.com/RocketChat/Rocket.Chat
 * 고가용성 구축
-    * 엔터프라이즈 에디션 제공
+    * https://rocket.chat/pricing/
+    * 플랜을 보면 엔터프라이즈 에디션 제공하는 것으로 되어 있지만, 커뮤니티 에디션으로도 충분한 듯
+        * https://docs.rocket.chat/installation/docker-containers/high-availability-install 
 * 문서 수준
     * https://docs.rocket.chat/?gclid=undefined
     * 부족해 보임
         * 자바스크립트 사용 예제가 없다
 * 가격 및 라이센싱 정책
+    * https://rocket.chat/pricing/
     * MIT 라이센스
     * 클라우드 지원
     * 셀프 호스팅
