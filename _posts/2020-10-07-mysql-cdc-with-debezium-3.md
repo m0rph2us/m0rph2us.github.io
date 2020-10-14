@@ -189,5 +189,5 @@ docker run -i -a stdin --rm edenhill/kafkacat:1.5.0 -P -b {Server list. e.g. kaf
 
 ## 참고
 
-1. [카프카 커넥트 REST 인터페이스](https://docs.confluent.io/current/connect/references/restapi.html)
-2. [Running Kafka in Production](https://docs.confluent.io/current/kafka/deployment.html)
+* [카프카 커넥트 REST 인터페이스](https://docs.confluent.io/current/connect/references/restapi.html)
+* [Running Kafka in Production](https://docs.confluent.io/current/kafka/deployment.html)
