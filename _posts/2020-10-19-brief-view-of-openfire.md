@@ -2,7 +2,7 @@
 layout: post
 excerpt_separator: <!--more-->
 title: 'Brief view of Openfire'
-categories: mysql cdc debezium
+categories: openfire 오픈파이어
 ---
 
 # 오픈파이어 간략히 살펴보기
