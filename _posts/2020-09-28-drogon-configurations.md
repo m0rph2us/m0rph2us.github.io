@@ -2,7 +2,7 @@
 layout: post
 excerpt_separator: <!--more-->
 title: Drogon - Configurations
-categories: drogon c++ 드로곤
+categories: drogon
 ---
 
 # 드로곤(Drogon) - 설정 항목

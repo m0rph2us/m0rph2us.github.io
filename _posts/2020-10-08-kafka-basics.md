@@ -2,7 +2,7 @@
 layout: post
 excerpt_separator: <!--more-->
 title: 'Kafka Basics'
-categories: kafka 카프카 
+categories: kafka 
 ---
 
 # 카프카 시작하기

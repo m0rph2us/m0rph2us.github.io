@@ -92,11 +92,95 @@ categories: spring batch
 
 ## 샘플 코드
 
-다음 샘플 코드는 코틀린으로 작성되었으며, 1부터 100까지의 합을 구하는 아주 단순한 예제이다.
+다음 샘플 코드는 코틀린으로 작성되었으며, 1부터 25까지의 수에 3을 곱하는 아주 단순한 예제이다.
 
-실행 가능한 전체 코드는 에서 클론할 수 있다. 그리고 클론받은 디렉터리로 이동해서 다음 명령을 실행하면 된다.
+```kotlin
+@Configuration
+class SimpleJobConfig(
+        val jobBuilderFactory: JobBuilderFactory,
+        val stepBuilderFactory: StepBuilderFactory
+) {
 
-이렇게 데이터를 뽑아서 변형하고 로드하는 것을 ETL(Extract & Transform & Load)이라고 한다. 대부분의 배치 처리는 보통 이러한 ETL 의 집합으로 이루어진다.
+    // Job 생성
+    @Bean
+    fun simpleJob(): Job = jobBuilderFactory.get("simpleJob")
+            .start(simpleStep())
+            .build()
+
+    // Step 생성
+    @Bean
+    fun simpleStep(): Step = stepBuilderFactory.get("simpleStep")
+            .chunk<Long, Long>(10) // 10개 단위로 write
+            .reader(reader())
+            .processor(processor())
+            .writer(writer())
+            .build()
+
+    val numbers = (1..25L).toMutableList()
+
+    // Reader 생성
+    fun reader(): ItemReader<Long> = ItemReader {
+        numbers.takeIf {
+            it.isNotEmpty()
+        }?.removeAt(0)?.also {
+            println("read: $it")
+        }
+    }
+
+    // Processor 생성
+    fun processor(): ItemProcessor<Long, Long> = ItemProcessor { item -> (item * 3) }
+
+    // Writer 생성
+    fun writer(): ItemWriter<Long> = ItemWriter { println("write: $it") }
+
+}
+```
+
+실행 가능한 전체 코드는 [여기](https://github.com/m0rph2us/spring-batch-examples.git) 에서 클론할 수 있다. 그리고 클론받은 
+디렉터리로 이동해서 다음 명령을 실행하면 된다.
+
+```
+./gradlew clean :very-simple:test -i
+```
+
+위의 커맨드를 수행하면 다음과 같은 결과를 확인할 수 있다.
+
+```
+read: 1
+read: 2
+read: 3
+read: 4
+read: 5
+read: 6
+read: 7
+read: 8
+read: 9
+read: 10
+write: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]
+read: 11
+read: 12
+read: 13
+read: 14
+read: 15
+read: 16
+read: 17
+read: 18
+read: 19
+read: 20
+write: [33, 36, 39, 42, 45, 48, 51, 54, 57, 60]
+read: 21
+read: 22
+read: 23
+read: 24
+read: 25
+write: [63, 66, 69, 72, 75]
+```
+
+출력에서 확인할 수 있는 것처럼, reader 에서 데이터를 읽어 processor 에서 처리하면 이것을 chunk 크기 만큼 모아놨다가 writer 에서 
+최종 처리하는 것을 확인할 수 있다. reader 는 null 을 만나면 읽기를 중단하고 chunk 중인 데이터를 모두 writer 가 처리한다음 Step 이 종료된다.
+
+이렇게 데이터를 뽑아서 변형하고 로드하는 것을 ETL(Extract & Transform & Load)이라고 한다. 대부분의 배치 처리는 보통 이러한 ETL 의 
+연속으로 이루어진다.
 
 ## 마무리
 

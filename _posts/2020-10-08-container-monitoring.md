@@ -2,7 +2,7 @@
 layout: post
 excerpt_separator: <!--more-->
 title: 'Container Monitoring'
-categories: container monitoring fluentd cadvisor prometheus elasticsearch elastalert CMAK grafana
+categories: docker monitoring
 ---
 
 # 컨테이너 모니터링
