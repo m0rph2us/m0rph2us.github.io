@@ -9,6 +9,10 @@ categories: spring batch
 ## 개요
 
 이번 포스팅에서는 스프링 배치를 활용하여 배치 처리 애플리케이션을 개발하기에 앞서 스프링 배치가 무엇인지 기본적인 개념을 살펴보려고 한다.
+
+{:refdef: style="text-align: center;"}
+![spring batch](/assets/spring-batch.png)
+{:refdef}
 <!--more-->
 
 ## 배치(Batch)
