@@ -1,7 +1,7 @@
 ---
 layout: post
 excerpt_separator: <!--more-->
-title: 'Spring Batch #1 - Get Started'
+title: 'Spring Batch #1 - Utilizing Database'
 categories: spring batch
 ---
 
