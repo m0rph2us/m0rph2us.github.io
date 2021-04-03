@@ -54,7 +54,7 @@ val value = ""
 
 ### 자바에는 있지만 코틀린에는 없다
 
-다음 목록들은 자바에는 있지만 코틀린에는 없는 것들에 대한 목록이다.
+다음 목록은 자바에는 있지만 코틀린에는 없는 것들에 대한 목록이다.
 
 * `static` 키워드가 없다
     * 가장 당황하는 내용이 아닐까 싶다. 우리의 친구 `static` 이 없다니? 하지만 코틀린으로 코드를 작성하다 보면 굳이 `static` 키워드가 필요 없다.
@@ -122,16 +122,19 @@ var value: String? = ""
 value = null // 불가
 ```
 
-### 널불가 체크
+### 상수
 
-특정한 상황에서는 변수를 널가능으로 선언해도 프로그램 흐름상 `null` 이 될 수 없음을 확신할 수 있는 경우가 생기는데, 이럴 때 사용할 수 있는 연산자가 `!!` 이다.
-
-`!!` 로 체크하면, 만약의 경우 변수가 `null` 이라면 NPE가 발생한다. 체크 이후의 변수 참조는 모두 `null` 불가 변수인 것처럼 참조하여 코딩할 수 있다.
+상수를 선언하는 방법은 다음과 같다. `const` 키워드를 사용하여 선언한다. 하지만, `const` 키워드는 일반 클래스 내부에서는 사용할 수 없기 때문에
+일반 클래스 내부에 상수를 선언하고 싶다면 동반자 객체를 사용한다.
 
 ```kotlin
-var value: String? = "1234"
-val result = somefunc(value!!)
-// 이후 라인에서 value 변수를 참조하는 코드가 있다면 번거롭게 null 처리를 하지 않아도 된다.
+// top level 에 선언
+const val CONST_VAL = "1234"
+
+// 오브젝트 내부에 선언
+object Constants {
+    const val CONST_VAL = "5678"
+}
 ```
 
 ## 함수
@@ -296,6 +299,19 @@ class SomeClass(value: String) {
 
 ### 클래스의 상속
 
+클래스의 상속, 구현 모두 `:` 하나면 된다. 여기서 주의할 점은 클래스가 상속이 가능하려면 `open` 키워드를 붙여줘야 한다.
+자바로 작성된 클래스는 기본으로 모두 `open` 으로 간주하면 된다.
+
+```kotlin
+open class Parent
+
+class Child : Parent() // extends. 상위 클래스의 생성자를 이곳에서 호출
+
+interface MyInterface // 인터페이스는 구현이 필요하기 때문에 명시적인 open 지정이 불필요하다
+
+class MyConcrete : MyInterface // implements.
+```
+
 ### 데이터 클래스
 
 유추할 수 있듯이 주로 데이터를 담기 위한 용도로 사용한다. 이 클래스의 특징은 내부적으로 `toString`, `hashCode`, `equals` 를 기본 구현해 준다는 점이다.
@@ -312,7 +328,7 @@ data class Data(
 
 ### 싱글턴 인스턴스
 
-코틀린은 싱글턴 인스턴스를 위한 특별한 구조를 제공한다. 스프링의 싱글턴 인스턴스와는 개념이 다르기 때문에 혼동하지 않도록 한다. 
+코틀린은 싱글턴 인스턴스를 위한 특별한 구조를 제공한다. 스프링의 싱글턴 인스턴스와는 개념이 다르기 때문에 혼동하지 않도록 한다.
 명시적인 인스턴스화가 필요없고, 바로 사용하면 된다.
 
 ```kotlin
@@ -327,10 +343,151 @@ fun main() {
 
 ### 동반자(companion) 클래스
 
+다음처럼 클래스 내부에 선언할 수 있다. `const` 키워드는 가장 바깥 수준(top level)이나 object 내부에서만 사용할 수 있기 때문에
+네임스페이싱이 필요하다면 `static` 대용으로 사용하기에는 다소 부족한 측면이 있다. 따라서 다음과 같이 동반자 객체를 선언하고 그 내부에
+상수 변수를 두는 형태로 `static` 변수 대안으로 사용할 수 있다.
+
+```kotlin
+class SomeClass {
+    companion object {
+        const val SOME_VALUE: String = "1234"
+    }
+}
+
+fun main() {
+    println(SomeClass.SOME_VALUE)
+    // 위와 동일하다
+    println(SomeClass.Companion.SOME_VALUE)
+}
+```
+
+다음과 같이 일반 object 를 사용해도 되겠지만, 추가적으로 이름이 필요하기 때문에 참조 이름이 길어질 수 있다.
+
+```kotlin
+class SomeClass {
+    object NeedName {
+        const val SOME_VALUE: String = "1234"
+    }
+}
+
+fun main() {
+    // println(SomeClass.SOME_VALUE) // 이렇게는 안된다
+    println(SomeClass.NeedName.SOME_VALUE)
+}
+```
+
+### 함수 재정의
+
+함수의 구현 및 재정의는 `override` 키워드를 사용하면 된다. 재밌는 점은 함수 단위로도 `open` 키워드를 지정해서 재정의 가능한 함수를 지정해줘야 한다는 점이다.
+그리고, 자바에서 사용했던 `@Override` 애너테이션은 사용하지 않아도 된다.
+
+```kotlin
+open class Parent {
+    open fun somefunc() = ""
+}
+
+class Child : Parent() {
+    override fun somefunc() = ""
+}
+
+interface MyInterface {
+    fun somefunc(): String
+}
+
+class MyConcrete : MyInterface {
+    override fun somefunc() = ""
+}
+```
+
 ### 함수 확장
 
-### 위임
+코틀린의 굉장히 편리한 기능중 하나이다. 기존 클래스를 손쉽게 확장할 수 있는 수단을 제공하며, 확장 메커니즘은 데코레이터 패턴으로 보면 이해하기 쉽다.
 
+예를 들어, `LocalDateTime` 클래스에 `Date` 로 변환을 수행하는 `toDate()` 라는 함수를 추가하고 싶다면 다음과 같이 하면 된다.
+
+```kotlin
+fun LocalDateTime.toDate(): Date = Date.from(this.atZone(ZoneId.systemDefault()).toInstant())
+
+fun main() {
+    println(LocalDateTime.now().toDate())
+}
+```
+
+자바로 동일하게 하려면 `LocalDateTime` 을 감싸는 래퍼 클래스를 만들어 확장해야 한다. 한 눈에 봐도 코딩량을 얼마나 줄여주는지 알 수 있다.
+
+```java
+class DateConvertableLocalDateTime {
+    private LocalDateTime ldt;
+    public DateConvertableLocalDateTime(LocalDateTime ldt) {
+        this.ldt = ldt;
+    }
+    public Date toDate() {
+        ...
+    }
+}
+```
+
+### 연산자 재정의
+### 위임
 ### 익명 클래스
 
 ## 타입
+### 캐스팅
+### 변환
+### 제네릭
+
+## 널 처리
+
+코틀린은 `null` 을 처리할 수 있는 매우 편리한 수단을 언어 자체에서 제공하기 때문에 자바에서 `null` 을 처리하기 위해 흔히 사용했던
+`@NotNull`, `Optional` 이 불필요하다.
+
+### 널불가 체크
+
+특정한 상황에서는 변수를 널가능으로 선언해도 프로그램 흐름상 `null` 이 될 수 없음을 확신할 수 있는 경우가 생기는데, 이럴 때 사용할 수 있는 연산자가 `!!` 이다.
+
+`!!` 로 체크하면, 만약의 경우 변수가 `null` 이라면 NPE가 발생한다. 체크 이후의 변수 참조는 모두 `null` 불가 변수인 것처럼 참조하여 코딩할 수 있다.
+
+```kotlin
+var value: String? = "1234"
+val result = somefunc(value!!)
+// 이후 라인에서 value 변수를 참조하는 코드가 있다면 번거롭게 null 처리를 하지 않아도 된다.
+```
+
+### 엘비스 연산자
+
+엘비스 연산자 `?:` 는 `null` 처리를 위해 꽤 자주 사용하는 연산자이다. 좌변이 `null` 인 경우에만 우변을 취한다. 그렇지 않으면 좌변을 취한다.
+예를 들어 변수가 `null` 인 경우 기본값을 돌려주도록 할 때 다음과 같이 간략하게 표현할 수 있다.
+
+```kotlin
+fun main() {
+    val value: String? = null
+    println(value ?: "hello")
+}
+```
+
+`value ?: "hello"` 를 자바로 표현하면 다음과 같다.
+
+```java
+(value == null) ? value : "hello"
+```
+
+### 안전호출 연산자
+
+안전호출 연산자 `?.` 는 좌측의 대상을 참조할 때 안전하게 참조할 수 있도록 도와준다. `?.` 이전의 참조 대상이 `null` 이 아닌 경우에만 우측을 수행한다.
+그렇지 않으면 `null` 으로 평가된다.
+
+```kotlin
+class SomeClass {
+    fun somefunc(): String? = null
+}
+fun main() {
+    println(SomeClass().somefunc())
+}
+```
+
+## 스코핑 함수
+
+## 동시성
+
+## 기타
+### 늦은 초기화
