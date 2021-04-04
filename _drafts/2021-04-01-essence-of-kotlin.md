@@ -1,20 +1,17 @@
 ---
 layout: post
 excerpt_separator: <!--more-->
-title: 'Brief introduction to kotlin for java-spring developer'
-categories: spring kotlin
+title: 'Essence of kotlin'
+categories: kotlin
 ---
 
-# 자바-스프링 개발자를 위한 코틀린 간략 소개
+# 코틀린 액기스
 ## 개요
 
-이번 포스팅에서는 자바 언어를 기반으로 스프링 애플리케이션 개발을 해온 개발자에 포커싱을 맞춰 코틀린을 소개해 보려고 한다.
-따라서 적어도 자바 언어에 대해서는 경험이 있다고 가정한다. 그리고, 따분한 역사에 대한 내용은 따로 얘기하지 않겠지만 관심이 있다면
+이번 포스팅에서는 코틀린에 대한 내용을 액기스만 모아 살펴보려고 한다. 적어도 자바 언어에 대해서는 경험이 있다고 가정한다.
+그리고, 따분한 역사에 대한 내용은 따로 얘기하지 않겠지만 관심이 있다면
 [Kotlin](https://en.wikipedia.org/wiki/Kotlin_(programming_language)) 을 방문해보기 바란다.
-
 <!--more-->
-이 포스팅에서는 코틀린의 모든 것들을 총 망라하지는 않을 것이며, 처음 코틀린을 시작할 때 필수로 알아야 하는 부분들 위주로 쓰윽 훑어볼 수 있도록
-소개하려고 한다.
 
 ## 코틀린 개발을 위한 첫 발
 
@@ -69,6 +66,7 @@ val value = ""
     * 조건 분기를 위해 흔히 사용하는 `switch` 가 없다.
 * `final` 키워드가 없다
     * 보면 알겠지만 필요하지가 않다.
+* `for (int i=0; size > i; ++i)` 같은 루핑 구조가 없다.
 
 당장 생각나는 것들만 정리했기 때문에 항목이 더 존재할 수도 있다.
 
@@ -122,6 +120,27 @@ var value: String? = ""
 value = null // 불가
 ```
 
+### 늦은 초기화: by lazy
+
+다음처럼 사용 시점에 초기화되는 변수를 만들 수 있다.
+
+```kotlin
+fun main() {
+    val myLazy: String by lazy { println("2"); "hello" }
+    println("1")
+    println(myLazy)
+}
+```
+
+### 늦은 초기화: lateinit
+
+리플렉션등에 의해 런타임에 초기화되는 변수를 만들 수 있다.
+
+```kotlin
+@Autowired
+lateinit var myService: MyService;
+```
+
 ### 상수
 
 상수를 선언하는 방법은 다음과 같다. `const` 키워드를 사용하여 선언한다. 하지만, `const` 키워드는 일반 클래스 내부에서는 사용할 수 없기 때문에
@@ -134,6 +153,63 @@ const val CONST_VAL = "1234"
 // 오브젝트 내부에 선언
 object Constants {
     const val CONST_VAL = "5678"
+}
+```
+
+## 흐름 제어
+### if
+
+보통의 `if` 문과 같다. 코틀린에서 `if` 문이 다른 점은 몇가지가 있지만, 그중 가장 많이 사용하게 되는 한 가지는 바로 결과를 돌려준다는 점이다.
+
+```kotlin
+fun main() {
+    val condition = true
+    val result = if (condition) { 1 } else { 2 }
+    println(result)
+}
+```
+
+### when
+
+기본적으로 `switch` 와 같다고 보면 되지만, 좀 더 스마트하다고 보면 될 것 같다.
+
+```kotlin
+when (x) {
+    1 -> print("x == 1")
+    2 -> print("x == 2")
+    else -> { // Note the block
+        print("x is neither 1 nor 2")
+    }
+}
+
+when (x) {
+    in 1..10 -> print("x is in the range")
+    in validNumbers -> print("x is valid")
+    !in 10..20 -> print("x is outside the range")
+    else -> print("none of the above")
+}
+```
+
+### for
+
+`for (int i=0; size > i; ++i)` 형식의 `for` 문은 사용하지 못한다. 그 대신 다음처럼 사용할 수 있다.
+
+```kotlin
+for (i in 1..3) {
+    println(i)
+}
+for (i in 6 downTo 0 step 2) {
+    println(i)
+}
+```
+
+중첩된 루프에서 루프를 벗어나거나 하고 싶을 때는 다음과 같이 레이블을 사용하면 된다.
+
+```kotlin
+loop@ for (i in 1..100) {
+    for (j in 1..100) {
+        if (...) break@loop
+    }
 }
 ```
 
@@ -202,6 +278,30 @@ fun test(param: String) = param
 ```
 
 ### 람다 함수
+
+람다 함수는 다음과 같이 정의할 수 있다. 변수에 저장할 수도, 다른 함수의 매개변수로 넘길수도 있다.
+
+```kotlin
+fun main() {
+    val func = { param: String -> println(param) }
+    func("hello")
+}
+```
+
+다음은 다른 함수의 매개변수로 사용되는 경우이다.
+
+```kotlin
+fun func1(param: String, func2: (param: String) -> Unit) {
+    func2(param)
+}
+fun main() {
+    func1("hello") {
+        println(it)
+    }
+}
+```
+
+여기에서 재밌는 점은 마지막 람다 함수는 바깥으로 빼내어 마치 코드 블록처럼 사용할 수 있다는 점이다.
 
 ## 클래스
 ### 클래스의 선언
@@ -314,7 +414,8 @@ class MyConcrete : MyInterface // implements.
 
 ### 데이터 클래스
 
-유추할 수 있듯이 주로 데이터를 담기 위한 용도로 사용한다. 이 클래스의 특징은 내부적으로 `toString`, `hashCode`, `equals` 를 기본 구현해 준다는 점이다.
+유추할 수 있듯이 주로 데이터를 담기 위한 용도로 사용한다. 이 클래스의 특징은 내부적으로
+`toString`, `hashCode`, `equals`, `copy` 를 기본 구현해 준다는 점이다.
 한 가지 단점은 상속이 되지 않는다는 점인데(부모 데이터 클래스에 `open` 키워드를 사용할 수 없다), 이 부분은 데코레이터 같은 포함 패턴을 사용하면 된다.
 
 ```kotlin
@@ -341,7 +442,7 @@ fun main() {
 }
 ```
 
-### 동반자(companion) 클래스
+### 동반자(companion) 객체
 
 다음처럼 클래스 내부에 선언할 수 있다. `const` 키워드는 가장 바깥 수준(top level)이나 object 내부에서만 사용할 수 있기 때문에
 네임스페이싱이 필요하다면 `static` 대용으로 사용하기에는 다소 부족한 측면이 있다. 따라서 다음과 같이 동반자 객체를 선언하고 그 내부에
@@ -427,14 +528,56 @@ class DateConvertableLocalDateTime {
 }
 ```
 
-### 연산자 재정의
+### 연산자 오버로딩
+
+연산자 오버로딩을 위해서는 `operator` 키워드를 붙여 연산자의 텍스트 표현 이름으로 함수를 구현하면 된다. 연산자들의 가능한 텍스트 표현 대조는 다양하기 때문에
+[여기](https://kotlinlang.org/docs/operator-overloading.html#binary-operations) 를 참고하기 바란다.
+
+예를 들어 두 객체를 더하는 연산자를 정의하고 싶다면 다음처럼 `+` 연산자의 텍스트 표현인 plus 함수를 구현하면 된다.
+
+```kotlin
+class SomeClass(val value: Long) {
+    operator fun plus(b: SomeClass) = SomeClass(this.value + b.value)
+}
+
+fun main() {
+    println((SomeClass(1) + SomeClass(2)).value)
+}
+```
+
 ### 위임
+
+같은 인터페이스를 구현하는 다른 클래스의 객체로 행위를 위임할 수 있는 기능이다. 내부적으로 위임 코드를 자동으로 만들기 때문에 같은 방식으로
+자바와 같은 언어로 만드는 것에 비해 코딩량이 상당히 줄어든다.
+
+```kotlin
+interface Base {
+    fun printMessage()
+    fun printMessageLine()
+}
+
+class BaseImpl(val x: Int) : Base {
+    override fun printMessage() { print(x) }
+    override fun printMessageLine() { println(x) }
+}
+
+class Derived(b: Base) : Base by b {
+    override fun printMessage() { print("abc") }
+}
+
+fun main() {
+    val b = BaseImpl(10)
+    Derived(b).printMessage()
+    Derived(b).printMessageLine()
+}
+```
+
 ### 익명 클래스
 
 ## 타입
 ### 캐스팅
-### 변환
 ### 제네릭
+### 앨리어스
 
 ## 널 처리
 
@@ -481,13 +624,148 @@ class SomeClass {
     fun somefunc(): String? = null
 }
 fun main() {
-    println(SomeClass().somefunc())
+    println(SomeClass().somefunc()?.length)
+}
+```
+
+## 문자열 처리
+### 보간
+
+다음과 같이 문자열내에 변수의 문자열 쉽게 결합할 수 있다. 다음에서 `$value` 는 `value.toString()` 의 결과로 치환된다.
+
+```kotlin
+fun main() {
+    val value = "hello"
+    println("$value")
+}
+```
+
+참조 표현이나 함수 호출등 복잡한 표현식이 들어가야 한다면 다음과 같이 `{}` 로 표현식을 감싸야 한다.
+
+```kotlin
+fun main() {
+    val value = "hello"
+    println("${value.length}")
+}
+```
+
+### 삼중 겹따옴표
+
+멀티라인 문자열을 정의할 때 유용하다.
+
+```kotlin
+fun main() {
+    val value = """
+    hi
+    hello
+    """
+    println(value)
 }
 ```
 
 ## 스코핑 함수
 
-## 동시성
+스코핑 함수는 굉장히 많이 사용하는 구조이기 때문에 숙지하는 것이 좋다. 스코핑 함수는 일관적인 관례로 잘 사용하면
+코딩량을 줄이고 코드의 가독성을 끌어 올릴 수 있다.
+[공식문서](https://kotlinlang.org/docs/scope-functions.html)에서는 객체 참조를 어떻게 하느냐,
+람다 함수가 반환한 결과를 받느냐에 따라 사용 관례가 나뉜다.
+하지만 인터넷에서 개발자들이 주장하는 사용 관례는 개발자마다 조금씩 차이를 보이는 부분도 있다.
+
+### with
+
+리시버 객체를 가지고 할 수 있는 일련의 작업을 수행하기 위한 용도로 사용한다.
+
+```kotlin
+fun main() {
+    val result = with(1) {
+        // this 로 참조한다
+        println(this) // 1
+        toDouble() // 이 결과가 반환된다.
+    }
+    println(result) // 1.0
+}
+```
+
+보면 알겠지만 이 함수는 확장함수가 아니다.
+
+### apply
+
+리시버 객체에 상태를 적용하고 리시버 객체를 다시 반환받기 위한 용도로 사용한다.
+
+주로 객체를 초기화하기 위한 용도로 사용한다.
+
+```kotlin
+fun main() {
+    val result = mutableListOf<String>().apply {
+        // this 로 참조한다
+        add("hello")
+        add("world")
+        // 다른 초기화 작업들 ...
+    }
+    println(result) // ["hello", "world"]
+}
+```
+
+이는 실제로 다음처럼 자바에서 굉장히 많이 사용하는 패턴을 간략화 할 수 있다.
+
+```java
+List<String> list = new ArrayList<>();
+list.add("hello");
+list.add("world");
+// 다른 초기화 작업들 ...
+```
+
+### let
+
+주로 리시버 객체를 가지고 다른 타입의 객체로 컨버팅하기 위한 용도로 사용한다.
+
+```kotlin
+fun main() {
+    val result = "hello".let {
+        // 기본적으로 it 으로 리시버 객체를 참조한다.
+        it.length // 마지막으로 평가되는 표현식의 결과가 반환된다.
+    }.let { len -> // 리시버 객체 이름을 지정할 수도 있다. 이렇게 이름을 지정하면 it 을 사용하는 것보다 가독성이 좋은 경우가 많다.
+        len.toDouble()
+    }
+    println(result) // 5.0
+}
+```
+
+이런 용도로 사용한다면 람다 함수 내부에서는 사이드이펙트를 발생시키지 않고 다른 객체를 만드는 것이 좋다.
+
+### also
+
+리시버 객체를 가지고 다른 부작업을 수행하고 리시버 객체를 다시 반환받기 위한 용도로 사용한다.
+
+```kotlin
+fun main() {
+    val result = "hello".also {
+        // 기본적으로 it 으로 리시버 객체를 참조한다.
+        println(it.capitalize()) // Hello
+    }.also { entity -> // 리시버 객체 이름을 지정할 수도 있다.
+        // 다른 부작업
+        println(entity.substring(0, 2)) // he
+    }
+    println(result) // hello
+}
+```
+
+### run
+
+리시버 객체를 가지고 작업을 수행하고 수행 결과값을 반환받기 위해 사용한다.
+
+주로 리시버 객체와 관계된 일련의 작업을 수행하고 그 결과를 반환받기 위해 사용된다.
+
+```kotlin
+fun main() {
+    val result = "hello".run {
+        // this 로 참조한다
+        capitalize()
+    }
+    println(result) // Hello
+}
+```
 
 ## 기타
-### 늦은 초기화
+### 스프레드 연산자
+### 타입 앨리어스
