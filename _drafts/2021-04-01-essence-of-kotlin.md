@@ -572,8 +572,6 @@ fun main() {
 }
 ```
 
-### 익명 클래스
-
 ## 타입
 ### 캐스팅
 
@@ -587,7 +585,16 @@ val x: String? = y as? String // 캐스팅을 시도하고 캐스팅이 실패�
 
 ### 제네릭
 
-제네릭은 자바의 제네릭과 기본적으로 같지만, 사용 방법이 조금 차이가 있다.
+제네릭은 자바의 제네릭과 기본적으로 같지만, 가변성(variance) 지정에서 조금 차이가 있다.
+
+```kotlin
+interface Producer<out T> { // 여기에서 out 은 extends 와 같으며, 리턴 타입에만 사용할 수 있다.
+    fun produce(): T
+}
+interface Consumer<in T> { // 여기에서 in 은 super 와 같으며, 매개변수 타입에만 사용할 수 있다.
+    fun consume(t: T)
+}
+```
 
 ### 앨리어스
 
