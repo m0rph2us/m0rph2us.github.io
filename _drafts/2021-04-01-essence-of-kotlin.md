@@ -576,8 +576,34 @@ fun main() {
 
 ## 타입
 ### 캐스팅
+
+캐스팅은 다음과 같이 `as` 를 사용해서 할 수 있다.
+
+```kotlin
+val x: String = y as String // 캐스팅을 시도하고 캐스팅이 실패하면 예외가 던져짐
+val x: String? = y as String? // null 의 경우 캐스팅 할 수 없기 때문에 null 을 고려해야 한다면...
+val x: String? = y as? String // 캐스팅을 시도하고 캐스팅이 실패하면 null 을 반환
+```
+
 ### 제네릭
+
+제네릭은 자바의 제네릭과 기본적으로 같지만, 사용 방법이 조금 차이가 있다.
+
 ### 앨리어스
+
+다음처럼 타입 별칭을 만들수가 있다.
+
+```kotlin
+class A {
+    inner class Inner
+}
+class B {
+    inner class Inner
+}
+
+typealias AInner = A.Inner
+typealias BInner = B.Inner
+```
 
 ## 널 처리
 
@@ -765,7 +791,3 @@ fun main() {
     println(result) // Hello
 }
 ```
-
-## 기타
-### 스프레드 연산자
-### 타입 앨리어스
