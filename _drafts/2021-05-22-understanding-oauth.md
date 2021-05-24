@@ -109,11 +109,22 @@ oAuth 를 구성하는 기본적인 요소들은 다음과 같다.
 
 ## Keycloak
 
-`Keycloak` 은 스탠드얼론이나 스프링에 임베딩하는 방식으로도 구동할 수 있다.
+`Keycloak` 은 스탠드얼론이나 스프링 임베딩 방식으로도 구동할 수 있다.
 
-## 의문점들
+다음은 `Keycloak` 으로 인증 및 인가 구현시 참고할만한 내용들이다.
 
-* 토큰은 어떻게 관리하는 것이 좋을까?
+* 로그인 UI 커스터마이징
+    * 지역화, 템플릿, CSS 수정 등 거의 원하는 형태로 커스터마이징이 가능하다.
+    * https://www.baeldung.com/keycloak-custom-login-page
+* 사용자 데이터베이스 연동
+    * 기존 사용자 데이터베이스를 연동할 수 있는 SPI 제공 
+    * https://www.baeldung.com/java-keycloak-custom-user-providers
+* 자바스크립트 어댑터 지원
+    * https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
+* 소셜 로그인
+    * Facebook, Google: Built-in
+    * Apple: https://github.com/BenjaminFavre/keycloak-apple-social-identity-provider
+    * Kakao: https://github.com/origandrew/keycloak-kakao
 
 ## 참고
 
@@ -135,3 +146,7 @@ oAuth 를 구성하는 기본적인 요소들은 다음과 같다.
 * https://www.baeldung.com/spring-boot-keycloak
 * https://www.baeldung.com/keycloak-embedded-in-spring-boot-app
 * https://www.baeldung.com/keycloak-custom-login-page
+* https://www.baeldung.com/java-keycloak-custom-user-providers
+* https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
+* https://github.com/BenjaminFavre/keycloak-apple-social-identity-provider
+* https://github.com/origandrew/keycloak-kakao
