@@ -644,7 +644,7 @@ fun main() {
 `value ?: "hello"` 를 자바로 표현하면 다음과 같다.
 
 ```java
-(value == null) ? value : "hello"
+(value != null) ? value : "hello"
 ```
 
 ### 안전호출 연산자
